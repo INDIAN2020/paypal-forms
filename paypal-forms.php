@@ -4,8 +4,7 @@ Plugin Name: PayPal Forms
 Version: 1.0
 Author: Smyeco
 Author URI: http://www.smye.co/
-Description: This plugin allows you to create order forms with integrated PayPal payments. Simple and
-strightforward to use.
+Description: This plugin allows you to create order forms with integrated PayPal payments. Simple and straightforward to use.
 */
 
 function pf_is_number($string){
