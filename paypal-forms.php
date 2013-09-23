@@ -5,7 +5,7 @@ Version: 1.0.1
 Plugin URI: http://smye.co
 Author: Smyeco
 Author URI: http://www.smye.co/
-Description: This plugin allows you to create order forms with integrated PayPal payments. Simple and straightforward to use.
+Description: This plugin allows you to create order forms with integrated PayPal payments. Coupon codes can also be created. Simple and straightforward to use!
 */
 
 function pf_is_number($string){
@@ -212,7 +212,7 @@ function pf_shortcode($args = array()){
 add_action('admin_menu', 'pf_admin_menu');
 
 function pf_admin_menu(){
-	add_menu_page('Paypal Forms', 'Paypal Forms', 'administrator', 'paypal-forms', 'pf_page');
+	add_menu_page('PayPal Forms', 'PayPal Forms', 'administrator', 'paypal-forms', 'pf_page');
 }
 
 function pf_page(){
@@ -585,7 +585,7 @@ function pf_page(){
 ?>
 <div class="wrap">
 	<div id="icon-edit-pages" class="icon32"><br></div>
-	<h2>Paypal Forms<a href="admin.php?page=paypal-forms&amp;action=new" class="add-new-h2">Add New</a></h2>
+	<h2>PayPal Forms<a href="admin.php?page=paypal-forms&amp;action=new" class="add-new-h2">Add New</a></h2>
 
 <?php if (strlen($message)): ?>
 	<div id="message" class="updated below-h2"><p><?php echo $message; ?></p></div>
