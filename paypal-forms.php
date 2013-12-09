@@ -1,11 +1,11 @@
 <?php
 /*
 Plugin Name: PayPal Forms
-Version: 1.0.1
+Version: 1.0.2
 Plugin URI: http://smye.co
 Author: Smyeco
 Author URI: http://www.smye.co/
-Description: This plugin allows you to create order forms with integrated PayPal payments. Coupon codes can also be created. Simple and straightforward to use!
+Description: This plugin allows you to create order forms with integrated PayPal payments. Simple and straightforward to use.
 */
 
 function pf_is_number($string){
@@ -121,7 +121,8 @@ function pf_init(){
 add_shortcode('paypal-form', 'pf_shortcode');
 
 function pf_shortcode($args = array()){
-	global $pf_errors;
+    ob_start();
+    global $pf_errors;
 	if (!isset($pf_errors)) $pf_errors = array();
 
 	if (!isset($args['id'])){
@@ -206,6 +207,8 @@ function pf_shortcode($args = array()){
 		echo '<input type="hidden" name="paypal-form" value="yes" />';
 		echo '<input type="hidden" name="form" value="'.esc_html($form_id).'" />';
 		echo '</form>';
+                $paypal_fields = ob_get_clean();
+                return $paypal_fields;
 	}
 }
 
