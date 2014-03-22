@@ -1,7 +1,7 @@
 <?php
 /*
 Plugin Name: PayPal Forms
-Version: 1.0.2
+Version: 1.0.3
 Plugin URI: http://smye.co/paypal-forms.html
 Author: Smyeco
 Author URI: http://www.smye.co/
@@ -12,6 +12,11 @@ function pf_is_number($string){
 	$string = preg_match('/^[0-9]+$/i',$string);
 	return $string;
 }
+function pf_is_decimal($string){
+	$string = preg_match('/^[0-9\.]+$/i',$string);
+	return $string;
+}
+
 function pf_is_email($string){
 	$string = preg_match('/[[:alnum:]_.-]+[@][[:alnum:]_.-]{2,}.[[:alnum:]_.-]{2,}/',$string);
 	return $string;
@@ -287,7 +292,7 @@ function pf_page(){
 					for ($x = 1; $x <= $last_option; $x++){
 						if (!strlen($_POST['option_'.$x.'_label'])) $errors[] = 'You must enter a label for option '.$x;
 						if (strlen($_POST['option_'.$x.'_price'])){
-							if (!pf_is_number($_POST['option_'.$x.'_price'])) $errors[] = 'Price for option '.$x.' is invalid';
+							if (!pf_is_decimal($_POST['option_'.$x.'_price'])) $errors[] = 'Price for option '.$x.' is invalid';
 						}
 					}
 				}
@@ -382,7 +387,7 @@ function pf_page(){
 					for ($x = 1; $x <= $last_option; $x++){
 						if (!strlen($_POST['option_'.$x.'_label'])) $errors[] = 'You must enter a label for option '.$x;
 						if (strlen($_POST['option_'.$x.'_price'])){
-							if (!pf_is_number($_POST['option_'.$x.'_price'])) $errors[] = 'Price for option '.$x.' is invalid';
+							if (!pf_is_decimal($_POST['option_'.$x.'_price'])) $errors[] = 'Price for option '.$x.' is invalid';
 						}
 					}
 				}
@@ -480,23 +485,26 @@ function pf_page(){
 			if (!strlen($_POST['name'])) $errors[] = 'You must enter a name';
 			if (!strlen($_POST['paypal'])) $errors[] = 'You must enter a Paypal address';
 			elseif (!pf_is_email($_POST['paypal'])) $errors[] = 'Paypal address is invalid';
+			if (!strlen($_POST['email'])) $errors[] = 'You must enter a notification email';
+			elseif (!pf_is_email($_POST['email'])) $errors[] = 'Notification email is invalid';
 			if (!strlen($_POST['item'])) $errors[] = 'You must enter a Paypal item name';
 			if (!strlen($_POST['currency'])) $errors[] = 'You must select a currency';
 			elseif (!in_array($_POST['currency'],$currencies)) $errors[] = 'Currency is invalid';
 			if (!strlen($_POST['price'])) $errors[] = 'You must enter a base price';
-			elseif (!pf_is_number($_POST['price'])) $errors[] = 'Base price is invalid';
+			elseif (!pf_is_decimal($_POST['price'])) $errors[] = 'Base price is invalid';
 			if (!strlen($_POST['period'])) $errors[] = 'You must select a recurring period';
 			elseif (!in_array($_POST['period'],$periods)) $errors[] = 'Recurring period is invalid';
 			if (!strlen($_POST['return'])) $errors[] = 'You must enter a return url';
 			elseif (!pf_is_url($_POST['return'])) $errors[] = 'Return url is invalid';
 			if (strlen($_POST['coupon'])){
 				if (!strlen($_POST['coupon_discount'])) $errors[] = 'You must enter a coupon discount';
-				elseif (!pf_is_number($_POST['coupon_discount'])) $errors[] = 'Cupon discount is invalid';
+				elseif (!pf_is_decimal($_POST['coupon_discount'])) $errors[] = 'Cupon discount is invalid';
 			}
 
 			if (!count($errors)){
 				$forms[$form_id]['name'] = $_POST['name'];
 				$forms[$form_id]['paypal'] = $_POST['paypal'];
+				$forms[$form_id]['email'] = $_POST['email'];
 				$forms[$form_id]['item'] = $_POST['item'];
 				$forms[$form_id]['currency'] = $_POST['currency'];
 				$forms[$form_id]['price'] = $_POST['price'];
@@ -527,22 +535,22 @@ function pf_page(){
 		$display = 'add-form';
 		if ($_SERVER['REQUEST_METHOD'] == 'POST'){
 			if (!strlen($_POST['name'])) $errors[] = 'You must enter a name';
-			if (!strlen($_POST['email'])) $errors[] = 'You must enter a notification email';
-			elseif (!pf_is_email($_POST['email'])) $errors[] = 'Notification email is invalid';
 			if (!strlen($_POST['paypal'])) $errors[] = 'You must enter a Paypal address';
 			elseif (!pf_is_email($_POST['paypal'])) $errors[] = 'Paypal address is invalid';
+			if (!strlen($_POST['email'])) $errors[] = 'You must enter a notification email';
+			elseif (!pf_is_email($_POST['email'])) $errors[] = 'Notification email is invalid';
 			if (!strlen($_POST['item'])) $errors[] = 'You must enter a Paypal item name';
 			if (!strlen($_POST['currency'])) $errors[] = 'You must select a currency';
 			elseif (!in_array($_POST['currency'],$currencies)) $errors[] = 'Currency is invalid';
 			if (!strlen($_POST['price'])) $errors[] = 'You must enter a base price';
-			elseif (!pf_is_number($_POST['price'])) $errors[] = 'Base price is invalid';
+			elseif (!pf_is_decimal($_POST['price'])) $errors[] = 'Base price is invalid';
 			if (!strlen($_POST['period'])) $errors[] = 'You must select a recurring period';
 			elseif (!in_array($_POST['period'],$periods)) $errors[] = 'Recurring period is invalid';
 			if (!strlen($_POST['return'])) $errors[] = 'You must enter a return url';
 			elseif (!pf_is_url($_POST['return'])) $errors[] = 'Return url is invalid';
 			if (strlen($_POST['coupon'])){
 				if (!strlen($_POST['coupon_discount'])) $errors[] = 'You must enter a coupon discount';
-				elseif (!pf_is_number($_POST['coupon_discount'])) $errors[] = 'Cupon discount is invalid';
+				elseif (!pf_is_decimal($_POST['coupon_discount'])) $errors[] = 'Cupon discount is invalid';
 			}
 
 			if (!count($errors)){
@@ -551,8 +559,8 @@ function pf_page(){
 
 				$forms[$form_id] = array();
 				$forms[$form_id]['name'] = $_POST['name'];
-				$forms[$form_id]['email'] = $_POST['email'];
 				$forms[$form_id]['paypal'] = $_POST['paypal'];
+				$forms[$form_id]['email'] = $_POST['email'];
 				$forms[$form_id]['item'] = $_POST['item'];
 				$forms[$form_id]['currency'] = $_POST['currency'];
 				$forms[$form_id]['price'] = $_POST['price'];
@@ -733,7 +741,7 @@ function pf_page(){
 		</tr>
 		<tr>
 			<td>Base price</td>
-			<td><b><?php echo esc_html($form['currency']); ?> <?php echo number_format($form['price']); ?></b></td>
+			<td><b><?php echo esc_html($form['currency']); ?> <?php echo number_format($form['price'],2); ?></b></td>
 		</tr>
 		<tr>
 			<td>Recurring period</td>
