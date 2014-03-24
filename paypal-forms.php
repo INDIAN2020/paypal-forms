@@ -2,7 +2,7 @@
 /*
 Plugin Name: PayPal Forms
 Version: 1.0.3
-Plugin URI: http://smye.co/paypal-forms.html
+Plugin URI: http://smye.co/
 Author: Smyeco
 Author URI: http://www.smye.co/
 Description: This plugin allows you to create order forms with integrated PayPal payments. Simple and straightforward to use.
